@@ -1,0 +1,159 @@
+   <!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Kas Umum Pengeluaran Keuangan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Buku Kas Umum Pengeluaran Keuangan</h1>
+   
+
+    <form id="expenseForm">
+        <label for="date">Tanggal:</label>
+        <input type="date" id="date" required>
+
+        <label for="description">Deskripsi Pengeluaran:</label>
+        <input type="text" id="description" placeholder="Contoh: Beli bahan makanan" required>
+
+        <label for="amount">Jumlah (Rp):</label>
+        <input type="number" id="amount" placeholder="Contoh: 50000" min="0" required>
+
+        <button type="submit">Tambah Pengeluaran</button>
+    </form>
+
+    <h2>Daftar Pengeluaran</h2>
+    <table id="expenseTable">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Deskripsi</th>
+                <th>Jumlah (Rp)</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="expenseList">
+            <!-- Data akan ditambahkan di sini -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="total">Total Pengeluaran:</td>
+                <td id="totalAmount" class="total">0</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        // Fungsi untuk memuat data dari localStorage
+        function loadExpenses() {
+            const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            const expenseList = document.getElementById('expenseList');
+            const totalAmount = document.getElementById('totalAmount');
+            expenseList.innerHTML = '';
+            let total = 0;
+
+            expenses.forEach((expense, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${expense.date}</td>
+                    <td>${expense.description}</td>
+                    <td>${expense.amount.toLocaleString()}</td>
+                    <td><button onclick="deleteExpense(${index})">Hapus</button></td>
+                `;
+                expenseList.appendChild(row);
+                total += expense.amount;
+            });
+
+            totalAmount.textContent = total.toLocaleString();
+        }
+
+        // Fungsi untuk menambah pengeluaran
+        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const date = document.getElementById('date').value;
+            const description = document.getElementById('description').value;
+            const amount = parseInt(document.getElementById('amount').value);
+
+            const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            expenses.push({ date, description, amount });
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+
+            // Reset form dan reload data
+            this.reset();
+            loadExpenses();
+        });
+
+        // Fungsi untuk menghapus pengeluaran
+        function deleteExpense(index) {
+            const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            expenses.splice(index, 1);
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+            loadExpenses();
+        }
+
+        // Muat data saat halaman dimuat
+        window.onload = loadExpenses;
+    </script>
+</body>
+</html>
+ <div class="footer">
+        <p>Dibuat oleh: SERVAS DON RAU</p>
+    </div>
